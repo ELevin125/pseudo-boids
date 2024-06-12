@@ -3,7 +3,7 @@ let MANAGER;
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    MANAGER = new Manager(50);
+    MANAGER = new Manager(25, color(255, 100, 0));
 }
 
 function draw() {
@@ -13,16 +13,17 @@ function draw() {
 }
 
 class Manager {
-    constructor(boidCount = 10) {
+    constructor(boidCount = 10, color) {
         this.direction = p5.Vector.random2D();
-        this.boids = this._createBoids(boidCount);
+        this.boids = this._createBoids(boidCount, color);
     }
 
-    _createBoids(boidCount) {
+    _createBoids(boidCount, color) {
         return Array.from({ length: boidCount }, () => new Boid(random(width / 2), 
                                                                 random(height / 2), 
                                                                 20,
-                                                                5,
+                                                                color,
+                                                                3,
                                                                 this.direction));
     }
 
@@ -35,10 +36,11 @@ class Manager {
 }
 
 class Boid {
-    constructor(x, y, size, paddingScalar, mainDirection) {
+    constructor(x, y, size, color, paddingScalar, mainDirection) {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.color = color
         this.paddingScalar = paddingScalar;
 
         this.mainDirection = mainDirection.copy();
@@ -93,7 +95,8 @@ class Boid {
 
     _draw() {
         push();
-        fill(255);
+        noStroke()
+        fill(this.color);
         translate(this.x, this.y);
         rotate(this.direction.heading());
         let s = this.size / 2;
